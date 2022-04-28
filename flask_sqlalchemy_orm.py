@@ -1,8 +1,12 @@
+# Section 0. Import libraries ---------------------------------------------
+
 from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, Float
 from flask_marshmallow import Marshmallow
 import os
+
+# Section 1. Initialize Flask app -----------------------------------------
 
 app = Flask(__name__)
 # We'll use now the Gapminder database. To retrieve it we'll need
@@ -14,9 +18,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' \
 # See reference 1. Tracking modifications adds overhead, better deactivate 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+# Always initialize db then marshmallow. See reference 5
 ma = Marshmallow(app)
 
-# Section 1. Data Classes -------------------------------------------------
+# Section 2. Data Classes -------------------------------------------------
 
 class Surveys(db.Model):
   __tablename__ = 'surveys'
@@ -27,7 +32,7 @@ class Surveys(db.Model):
   pop = db.Column(db.Integer)
   gdpPercap = db.Column(db.Float)
   
-# Section 2. Routes -------------------------------------------------------
+# Section 3. Routes -------------------------------------------------------
 
 @app.route('/')
 def show_home():
@@ -36,27 +41,23 @@ def show_home():
 @app.route('/peru_2007', methods = ['GET'])
 def peru_2007():
   peru_2007_stats = Surveys.query.filter_by(country='Peru', year=2007).first()
+  # Now this process is called serialization
   result = peru_schema.dump(peru_2007_stats)
   return jsonify(result)
   
-# Section 3. Serializations -----------------------------------------------
+# Section 4. Serializations -----------------------------------------------
 
 class PeruSchema(ma.Schema):
   class Meta:
+    # Here we select the fields we want to show
     fields = ('lifeExp','pop','gdpPercap')
 
 peru_schema = PeruSchema()
 
-
+# Section 5. Main and App settings ----------------------------------------
 if __name__ == '__main__':
   app.run(debug=True, host='127.0.0.1', port=5000)
-
-# REFERENCES
-# 1. About Track modifications: https://stackoverflow.com/questions/61573598/
-# 2. On needing db key in Flask: https://stackoverflow.com/questions/24872541/
-# 3. Recipe to add a db key: https://www.sqlitetutorial.net/sqlite-primary-key/
-# 4. About autoincrement: https://sqlite.org/autoinc.html
-
+  
 # NOTES
 # a. I received some warnings about Flask-SQLAlchemy integration that requires 
 # marshmallow-sqlalchemy to be installed. So I did that using:
@@ -73,3 +74,13 @@ if __name__ == '__main__':
 # c. Do I have to worry about autoincrement in an id? No, it seems that it 
 # imposes extra CPU resources, let the id as primary and sqlite will create 
 # it's increments alone, according to ref 4.
+# d. Serialization is the process of converting an object into a textual 
+# representation. The inverted process is called deserialization
+
+# REFERENCES
+# 1. About Track modifications: https://stackoverflow.com/questions/61573598/
+# 2. On needing db key in Flask: https://stackoverflow.com/questions/24872541/
+# 3. Recipe to add a db key: https://www.sqlitetutorial.net/sqlite-primary-key/
+# 4. About autoincrement: https://sqlite.org/autoinc.html
+# 5. Sequence marshmallow: https://flask-marshmallow.readthedocs.io/en/latest/
+
