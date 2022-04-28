@@ -6,13 +6,27 @@ import os
 
 # Section 1. Initialize Flask app -----------------------------------------
 app = Flask(__name__)
-
-# Section 2. Data Classes -------------------------------------------------
 basedir = os.path.abspath(os.path.dirname(__name__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite///' \
-    + os.path.join(basedir,'gapminder.sqlite') 
+    + os.path.join(basedir + 'gapminder.sqlite')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False    
+db = SQLAlchemy(app)
+ma = Marshmallow(app)
+
+# Section 2. Data Classes -------------------------------------------------
+class Surveys(db.Model):
+  __tablename__ = 'surveys'
+  id = db.Column(db.Integer, primary_key=True)
+  country = db.Column(db.String)
+  year = db.Column(db.Integer)
+  lifeExp = db.Column(db.Float)
+  pop = db.Column(db.Integer)
+  gdpPercap = db.Column(db.Float)
 
 # Section 3. Serializations -----------------------------------------------
+class IndicatorsSchema():
+  class Meta:
+    fields = ('lifeExp','pop','gdpPercap')
 
 # Section 4. Routes -------------------------------------------------------
 
