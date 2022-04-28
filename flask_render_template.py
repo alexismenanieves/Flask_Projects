@@ -8,6 +8,7 @@ def hello_visitor():
 
 @app.route('/')
 def show_home():
+  # We can render an html file, given that the file is in a 'templates' folder
   return render_template('index.html')
 
 if __name__ == '__main__':
