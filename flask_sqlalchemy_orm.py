@@ -14,16 +14,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' \
 # See reference 1. Tracking modifications adds overhead, better deactivate 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 # Section 1. Data Classes -------------------------------------------------
 
 class Surveys(db.Model):
   __tablename__ = 'surveys'
-  country = Column(String)
-  year = Column(Integer)
-  lifeExp = Column(Float)
-  pop = Column(Integer)
-  gdpPercap = Column(Float)
+  country = db.Column(db.String)
+  year = db.Column(db.Integer)
+  lifeExp = db.Column(db.Float)
+  pop = db.Column(db.Integer)
+  gdpPercap = db.Column(db.Float)
+
   
 # Section 2. Routes -------------------------------------------------------
 
@@ -36,4 +38,24 @@ if __name__ == '__main__':
 
 # REFERENCES
 # 1. About Track modifications: https://stackoverflow.com/questions/61573598/
+# 2. On needing db key in Flask: https://stackoverflow.com/questions/24872541/
+# 3. Recipe to add a db key: https://www.sqlitetutorial.net/sqlite-primary-key/
+# 4.
 
+
+# NOTES
+# a. I received some warnings about Flask-SQLAlchemy integration that requires 
+# marshmallow-sqlalchemy to be installed. So I did that using:
+# conda install -c conda-forge marshmallow-sqlalchemy
+# b. This is a great learning moment. I received an error telling me that 
+# "Mapper mapped class Surveys->surveys could not assemble any primary key 
+# columns for mapped table 'surveys'" and according to ref. 2 you always need 
+# in a DB a key when creating an object. So you have to modyfy the table to 
+# have a key but it seems that you can't do it directly in SQLite, based on 
+# ref. 3. The recipe is to rename the table (to old), create a new table with 
+# the old structure and the id, then pass all data from old table to new, then
+# drop the old table. It is important to call foreign_keys=off with PRAGMA at
+# the start and at foreign keys=on at the end 
+# c. Do I have to worry about autoincrement in an id? No, it seems that it 
+# imposes extra CPU resources, let the id as primary and sqlite will create 
+# it's increments alone, according to ref 4.
