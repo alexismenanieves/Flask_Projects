@@ -20,18 +20,33 @@ ma = Marshmallow(app)
 
 class Surveys(db.Model):
   __tablename__ = 'surveys'
+  id = db.Column(db.Integer, primary_key = True)
   country = db.Column(db.String)
   year = db.Column(db.Integer)
   lifeExp = db.Column(db.Float)
   pop = db.Column(db.Integer)
   gdpPercap = db.Column(db.Float)
-
   
 # Section 2. Routes -------------------------------------------------------
 
 @app.route('/')
 def show_home():
   return render_template('index.html')
+
+@app.route('/peru_2007', methods = ['GET'])
+def peru_2007():
+  peru_2007_stats = Surveys.query.filter_by(country='Peru', year=2007).first()
+  result = peru_schema.dump(peru_2007_stats)
+  return jsonify(result)
+  
+# Section 3. Serializations -----------------------------------------------
+
+class PeruSchema(ma.Schema):
+  class Meta:
+    fields = ('lifeExp','pop','gdpPercap')
+
+peru_schema = PeruSchema()
+
 
 if __name__ == '__main__':
   app.run(debug=True, host='127.0.0.1', port=5000)
@@ -40,8 +55,7 @@ if __name__ == '__main__':
 # 1. About Track modifications: https://stackoverflow.com/questions/61573598/
 # 2. On needing db key in Flask: https://stackoverflow.com/questions/24872541/
 # 3. Recipe to add a db key: https://www.sqlitetutorial.net/sqlite-primary-key/
-# 4.
-
+# 4. About autoincrement: https://sqlite.org/autoinc.html
 
 # NOTES
 # a. I received some warnings about Flask-SQLAlchemy integration that requires 
