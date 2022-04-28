@@ -24,7 +24,8 @@ if __name__ == '__main__':
   # Now we can run using debug to understand where we fail
   # And we can define here the host and port we want to use
   app.run(debug=True, host='127.0.0.1', port=5000)
-  
+ 
+# NOTES  
 # We can test this API using our browser or POSTMAN. The later is a great tool
 # It's interesting to see the server is Werkzeug/2.0.3 Python/3.8.13
 
