@@ -5,6 +5,10 @@ import json
 
 app = Flask(__name__)
 
+@app.route('/')
+def show_home():
+  return render_template('index.html')
+
 @app.route('/simple_plot')
 def show_simple_plot():
   bar = create_plot()
@@ -22,6 +26,4 @@ def create_plot():
   return graphJSON
 
 if __name__ == '__main__':
-  app,run(debug=True, host='127.0.0.1', port=5000)
-
-
+  app.run(debug=True, host='127.0.0.1', port=5000)
