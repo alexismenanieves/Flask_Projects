@@ -21,4 +21,7 @@ def create_plot():
   graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
   return graphJSON
 
+if __name__ == '__main__':
+  app,run(debug=True, host='127.0.0.1', port=5000)
+
 
