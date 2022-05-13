@@ -49,6 +49,16 @@ if __name__ == '__main__':
   app.run(debug=True, host='127.0.0.1', port=5000)
   
 # NOTES
+# Some credentials should be protected, so we must call them using 
+# environment variables. The way to create such variables in Unix and Mac is
+# in the terminal, type the following command
+# export DBUSER=value 
+# And to retrieve the value you should use in Python
+# os.getenv('DBUSER')
+# alternatively, you can use environ.get, which returns None is not available
+# os.environ.get('DBUSER')
 
 # REFERENCES
+# [1] twilio blog. Retrieved May 12, 2022. Working with Environment Variables 
+# in Python. https://www.twilio.com/blog/environment-variables-python
   
