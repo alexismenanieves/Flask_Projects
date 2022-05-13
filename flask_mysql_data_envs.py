@@ -16,6 +16,8 @@ db_port = os.getenv('DBPORT')
 
 app.config["SQLALCHEMY_DATABASE_URI"] \
     = f"mysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -23,24 +25,24 @@ ma = Marshmallow(app)
 # Section 2. Data Classes -------------------------------------------------
 class Artist(db.Model):
   __tablename__ = 'Artist'
-  ArtistId = db.Column(db.Integer, primaryKey=True)
+  ArtistId = db.Column(db.Integer, primary_key=True)
   Name = db.Column(db.String)
-  
+
 # Section 3. Routes -------------------------------------------------------
 @app.route('/')
 def show_home():
   return render_template('index.html')
-
+  
 @app.route('/<int:Artistid>')
 def show_artist(Artistid: int):
-  myquery = Artist.query.filter_by(Artistid=Artistid).first()
-  myresult = artist_schema.dump(my_query)
-  return jsonify(myresult)
+  my_query = Artist.query.filter_by(ArtistId=Artistid).first()
+  my_result = artist_schema.dump(my_query)
+  return jsonify(my_result)
 
 # Section 4. Serializations -----------------------------------------------
-class ArtistSchema(ma.schema):
+class ArtistSchema(ma.Schema):
   class Meta:
-    fields('ArtistId','Name')
+    fields = ('ArtistId','Name')
     
 artist_schema = ArtistSchema()
 
