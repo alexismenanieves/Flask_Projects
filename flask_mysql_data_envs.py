@@ -38,3 +38,17 @@ def show_artist(Artistid: int):
   return jsonify(myresult)
 
 # Section 4. Serializations -----------------------------------------------
+class ArtistSchema(ma.schema):
+  class Meta:
+    fields('ArtistId','Name')
+    
+artist_schema = ArtistSchema()
+
+# Section 5. Main and App settings ----------------------------------------
+if __name__ == '__main__':
+  app.run(debug=True, host='127.0.0.1', port=5000)
+  
+# NOTES
+
+# REFERENCES
+  
