@@ -59,6 +59,19 @@ if __name__ == '__main__':
 # os.getenv('DBUSER')
 # alternatively, you can use environ.get, which returns None is not available
 # os.environ.get('DBUSER')
+# Another way is to create an .env file, containing our sensitive info 
+# This is the model, is a simple text file 
+# DBUSER=value
+# DBPASS=secretpass
+# To retrieve the file, you should install python-dotenv package 
+# pip install python-dotenv 
+# Then in your script 
+# from dotenv import load_dotenv
+# load_dotenv()
+# Note that you can pass a path inside the parenthesis
+# Be careful of this .env file, it shouldn't be in your version control repos 
+# Hide it with gitignore
+
 
 # REFERENCES
 # [1] twilio blog. Retrieved May 12, 2022. Working with Environment Variables 
