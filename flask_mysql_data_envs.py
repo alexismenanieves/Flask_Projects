@@ -8,11 +8,11 @@ import json
 # Section 1. Initialize Flask app -----------------------------------------
 app = Flask(__name__)
 # credentials
-db_user = 
-db_pass = 
-db_name = 
-db_host = 
-db_port = 
+db_user = os.getenv('DBUSER')
+db_pass = os.getenv('DBPASS')
+db_name = os.getenv('DBNAME')
+db_host = os.getenv('DBHOST')
+db_port = os.getenv('DBPORT')
 
 app.config["SQLALCHEMY_DATABASE_URI"] \
     = f"mysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}"
